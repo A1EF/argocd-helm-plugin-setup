@@ -16,6 +16,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build and push the image
       run : |
+        docker buildx build --tag argocd-helm-plugin-setup .
+        docker container create --name bogus argocd-helm-plugin-setup
+        docker export bogus | docker import - ghcr.io/a1ef/argocd-helm-plugin-setup
         docker login --username a1ef --password ${{ secrets.GITHUB_TOKEN }} ghcr.io
-        docker build --tag ghcr.io/a1ef/argocd-helm-plugin-setup .
         docker push ghcr.io/a1ef/argocd-helm-plugin-setup
